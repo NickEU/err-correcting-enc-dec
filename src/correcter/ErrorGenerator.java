@@ -17,10 +17,13 @@ class ErrorGenerator {
             .boxed().collect(Collectors.toSet());
 
         return IntStream.range(0, text.length())
-            .mapToObj(i -> String.valueOf(indices.contains(i)
-                ? corruptChar(text.charAt(i))
-                : text.charAt(i)))
-            .collect(Collectors.joining());
+            .mapToObj(i -> {
+                char ch = text.charAt(i);
+                if (indices.contains(i)) {
+                    ch = corruptChar(ch);
+                }
+                return String.valueOf(ch);
+            }).collect(Collectors.joining());
     }
 
     static char corruptChar(char ch) {
