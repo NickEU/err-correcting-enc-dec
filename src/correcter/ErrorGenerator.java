@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
 class ErrorGenerator {
     private static final Random RANDOM = new Random();
 
-    protected static String simulateErrors(String text) {
+    static String simulateErrors(String text) {
         final int size = text.length();
 
         Set<Integer> indices = IntStream.iterate(0, i -> i + 3)
@@ -23,7 +23,7 @@ class ErrorGenerator {
             .collect(Collectors.joining());
     }
 
-    protected static char corruptChar(char ch) {
+    static char corruptChar(char ch) {
         char potential;
         String legalChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ";
         do {
