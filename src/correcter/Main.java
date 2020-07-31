@@ -7,7 +7,7 @@ public class Main {
 
     private static void runStage3() {
         String originalMsg = Util.readFromFile("send.txt");
-        byte[] bytes = Convert.toBinary(originalMsg);
+        String[] bytes = Convert.toBinary(originalMsg);
         ErrorGenerator.simulateBitLevelErrors(bytes);
         String receivedMsg = Convert.fromBinary(bytes);
         Util.writeToFile("received.txt", receivedMsg);
