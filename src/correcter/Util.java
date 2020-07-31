@@ -21,10 +21,11 @@ public class Util {
     }
 
     static void writeToFile(String fileName, String msg) {
-        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(PROJECT_DIR, fileName), Charset.defaultCharset())) {
+        try (BufferedWriter writer = Files.newBufferedWriter(
+            Paths.get(PROJECT_DIR, fileName), Charset.defaultCharset())) {
             writer.write(msg);
-        } catch (IOException x) {
-            System.err.format("IOException: %s%n", x);
+        } catch (IOException e) {
+            System.out.println("Cannot write to file: " + e.getMessage());
         }
     }
 }
