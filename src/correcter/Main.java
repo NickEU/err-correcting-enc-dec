@@ -8,6 +8,10 @@ import static correcter.Util.encodeMsg;
 
 public class Main {
     public static void main(String[] args) {
+        runStage2();
+    }
+
+    private static void runStage2() {
         String msgToTransmit = new Scanner(System.in).nextLine();
         String encodedMsg = encodeMsg(msgToTransmit);
         String corruptedMsg = simulateErrors(encodedMsg);
