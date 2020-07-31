@@ -10,10 +10,11 @@ class ErrorGenerator {
 
     static String simulateErrors(String text) {
         final int size = text.length();
+        final int errorEveryXChars = 3;
 
-        Set<Integer> indices = IntStream.iterate(0, i -> i + 3)
-            .limit(size / 3)
-            .map(i -> i + RANDOM.nextInt(3))
+        Set<Integer> indices = IntStream.iterate(0, i -> i + errorEveryXChars)
+            .limit(size / errorEveryXChars)
+            .map(i -> i + RANDOM.nextInt(errorEveryXChars))
             .boxed().collect(Collectors.toSet());
 
         return IntStream.range(0, text.length())
