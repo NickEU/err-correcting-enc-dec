@@ -12,6 +12,10 @@ class ErrorGenerator {
     }
 
     private static String corruptByte(String src) {
-        return src;
+        StringBuilder result = new StringBuilder(src);
+        int idxToCorrupt = RANDOM.nextInt(src.length());
+        char charToCorrupt = result.charAt(idxToCorrupt);
+        result.setCharAt(idxToCorrupt, charToCorrupt == '0' ? '1' : '0');
+        return result.toString();
     }
 }
