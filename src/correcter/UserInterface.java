@@ -13,20 +13,32 @@ public class UserInterface {
         String userMode = new Scanner(System.in).nextLine().trim();
         switch(userMode) {
             case "encode":
-                doEncodeStuff();
+                encodeMessage();
                 break;
             case "decode":
                 System.out.println("Decoding!");
                 break;
             case"send":
-                System.out.println("Sending!");
+                sendMessage();
                 break;
             default:
                 System.out.println("Unrecognized command!");
         }
     }
 
-    private void doEncodeStuff() {
+    private void sendMessage() {
+        printHeader(ENCODED_FILENAME);
+        String msgEncoded = Util.readFromFile(ENCODED_FILENAME);
+        printHexView(msgEncoded);
+        printBinView(msgEncoded);
+        String msgWithErrors = ErrorGenerator.corruptBytes(msgEncoded);
+        printHeader(RECEIVED_FILENAME);
+        Util.writeToFile(RECEIVED_FILENAME, msgWithErrors);
+        printBinView(msgWithErrors);
+        printHexView(msgWithErrors);
+    }
+
+    private void encodeMessage() {
         printHeader(SEND_FILENAME);
         String msgOriginal = Util.readFromFile(SEND_FILENAME);
         printTextView(msgOriginal);
