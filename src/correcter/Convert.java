@@ -2,19 +2,21 @@ package correcter;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 class Convert {
-    static String[] toBinary(String msg) {
-        byte[] bytes = msg.getBytes();
-        return IntStream.range(0, bytes.length)
-            .mapToObj(i -> Integer.toBinaryString(bytes[i]))
-            .toArray(String[]::new);
+    public static String textToBin(String msg) {
+        return msg.chars()
+            .mapToObj(Integer::toBinaryString)
+            .map(s -> '0' + s + " ")
+            .collect(Collectors.joining());
     }
 
-    static String fromBinary(String[] bytes) {
-        return Arrays.stream(bytes)
-            .map(b -> String.valueOf( (char) Integer.parseInt(b, 2)))
-            .collect(Collectors.joining());
+    public static String binToHex(String msg) {
+        return Arrays.stream(msg.split(" "))
+            .mapToInt(b -> Integer.parseInt(b, 2))
+            .mapToObj(Integer::toHexString)
+            .map(String::toUpperCase)
+            .map(s -> s.length() < 2 ? s.repeat(2) : s)
+            .collect(Collectors.joining(" "));
     }
 }
