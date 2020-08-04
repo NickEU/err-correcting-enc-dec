@@ -35,6 +35,7 @@ public class UserInterface {
         printBinView(msgBinary);
         printHeader(ENCODED_FILENAME);
         EncodedMsg encodedMsg = Coder.encode(msgBinary);
+        Util.writeToFile(ENCODED_FILENAME, encodedMsg.getParity());
         System.out.println(encodedMsg);
         printHexView(encodedMsg.getParity());
     }
