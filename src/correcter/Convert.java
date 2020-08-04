@@ -1,7 +1,6 @@
 package correcter;
 
 import java.util.Arrays;
-import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 
 class Convert {
@@ -16,6 +15,8 @@ class Convert {
         return Arrays.stream(msg.split(" "))
             .mapToInt(b -> Integer.parseInt(b, 2))
             .mapToObj(Integer::toHexString)
+            .map(String::toUpperCase)
+            .map(s -> s.length() < 2 ? s.repeat(2) : s)
             .collect(Collectors.joining(" "));
     }
 }
