@@ -37,4 +37,12 @@ class Coder {
             .collect(Collectors.joining(" "));
         return new EncodedMsg(resultExpand, resultParity);
     }
+
+    public static String decodeRaw(String receivedMsg) {
+        return receivedMsg;
+    }
+
+    public static String finishDecoding(String decodedMsgRaw) {
+        return decodedMsgRaw;
+    }
 }

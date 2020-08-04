@@ -1,5 +1,7 @@
 package correcter;
 
+import jdk.jshell.spi.ExecutionControl;
+
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -18,5 +20,9 @@ class Convert {
             .map(String::toUpperCase)
             .map(s -> s.length() < 2 ? s.repeat(2) : s)
             .collect(Collectors.joining(" "));
+    }
+
+    public static String binToText(String decodedMsgClean) {
+        return "Binary turned into text";
     }
 }

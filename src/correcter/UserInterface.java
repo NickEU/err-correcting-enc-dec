@@ -16,7 +16,7 @@ public class UserInterface {
                 encodeMessage();
                 break;
             case "decode":
-                System.out.println("Decoding!");
+                decodeMessage();
                 break;
             case"send":
                 sendMessage();
@@ -24,6 +24,23 @@ public class UserInterface {
             default:
                 System.out.println("Unrecognized command!");
         }
+    }
+
+    private void decodeMessage() {
+        printHeader(RECEIVED_FILENAME);
+        String receivedMsgBinary = Util.readFromFile(RECEIVED_FILENAME);
+        printHexView(receivedMsgBinary);
+        printBinView(receivedMsgBinary);
+        printHeader(DECODED_FILENAME);
+        System.out.println("correct: " + receivedMsgBinary);
+        String decodedMsgRaw = Coder.decodeRaw(receivedMsgBinary);
+        System.out.println("decode: " + decodedMsgRaw);
+        String decodedMsgClean = Coder.finishDecoding(decodedMsgRaw);
+        System.out.println("remove: " + decodedMsgClean);
+        printHexView(decodedMsgClean);
+        String originalMsg = Convert.binToText(decodedMsgClean);
+        printTextView(originalMsg);
+        Util.writeToFile(DECODED_FILENAME, originalMsg);
     }
 
     private void sendMessage() {
