@@ -14,17 +14,12 @@ class Coder {
             expand.append(doubleCh);
             parity.append(doubleCh);
             int curChar = ch == '0' ? 0 : 1;
-            if (parityXor == -1) {
-                parityXor = curChar;
-            } else {
-                parityXor ^= curChar;
-            }
+            parityXor = parityXor == -1 ? curChar : parityXor ^ curChar;
             idx++;
             if (idx % 3 == 0) {
                 expand.append(" ");
-                parity.append(parityXor).append(parityXor);
+                parity.append(parityXor).append(parityXor).append(" ");
                 parityXor = -1;
-                parity.append(" ");
             }
         }
         String resultExpand = Arrays.stream(expand.toString().split(" "))
