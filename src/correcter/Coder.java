@@ -7,7 +7,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 class Coder {
     public static EncodedMsg encode(String msgBinary) {
@@ -19,7 +18,7 @@ class Coder {
             String doubleCh = ch + "" + ch;
             expand.append(doubleCh);
             parity.append(doubleCh);
-            int curChar = ch == '0' ? 0 : 1;
+            int curChar = Character.getNumericValue(ch);
             parityXor = parityXor == -1 ? curChar : parityXor ^ curChar;
             idx++;
             if (idx % 3 == 0) {
@@ -28,15 +27,22 @@ class Coder {
                 parityXor = -1;
             }
         }
+        // fix last byte if the total num of significant bits % 3 != 0
+        while (idx % 3 != 0) {
+            parity.append(parityXor).append(parityXor);
+            parityXor ^= Character.getNumericValue(parity.charAt(parity.length() - 3));
+            idx++;
+            if (idx % 3 == 0) {
+                parity.append(parityXor).append(parityXor).append(" ");
+                break;
+            }
+        }
         String resultExpand = Arrays.stream(expand.toString().split(" "))
             .reduce("", (acc, cur) -> {
                 cur = cur.concat(".".repeat(8)).substring(0, 8);
                 return acc + " " + cur;
             }).stripLeading();
-        String resultParity = Arrays.stream(parity.toString().split(" "))
-            .map(s -> s.length() < 8 ? s.concat("0".repeat(8)).substring(0, 8) : s)
-            .collect(Collectors.joining(" "));
-        return new EncodedMsg(resultExpand, resultParity);
+        return new EncodedMsg(resultExpand, parity.toString());
     }
 
     public static String decodeRaw(String receivedMsg) {
@@ -73,28 +79,35 @@ class Coder {
         if (foundCorrupt) {
             removeCorruptionFromBit(bits, corruptId);
         }
-
         return IntStream.range(0, 3)
             .mapToObj(i -> String.valueOf(bits.get(i).charAt(0)))
             .collect(Collectors.joining());
     }
 
     private static void removeCorruptionFromBit(List<String> bits, int corruptId) {
-        int a = bits.get(0).charAt(0) == '0' ? 0 : 1;
-        int b = bits.get(1).charAt(0) == '0' ? 0 : 1;
-        int c = bits.get(2).charAt(0) == '0' ? 0 : 1;
-        int parity = bits.get(3).charAt(0) == '0' ? 0 : 1;
+        int a = Character.getNumericValue(bits.get(0).charAt(0));
+        int b = Character.getNumericValue(bits.get(1).charAt(0));
+        int c = Character.getNumericValue(bits.get(2).charAt(0));
+        int parity = Character.getNumericValue(bits.get(3).charAt(0));
+        int first;
+        int second;
         switch (corruptId) {
             case 0:
-                bits.set(0, String.valueOf(b ^ c ^ parity).repeat(2));
+                first = b;
+                second = c;
                 break;
             case 1:
-                bits.set(1, String.valueOf(a ^ c ^ parity).repeat(2));
+                first = a;
+                second = c;
                 break;
             case 2:
-                bits.set(2, String.valueOf(a ^ b ^ parity).repeat(2));
+                first = a;
+                second = b;
                 break;
+            default:
+                throw new IllegalStateException();
         }
+        bits.set(corruptId, String.valueOf(first ^ second ^ parity).repeat(2));
     }
 
     public static String finishDecoding(String decodedMsgRaw) {
