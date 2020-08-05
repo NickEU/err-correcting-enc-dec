@@ -16,7 +16,7 @@ class Convert {
             .mapToInt(b -> Integer.parseInt(b, 2))
             .mapToObj(Integer::toHexString)
             .map(String::toUpperCase)
-            .map(s -> s.length() < 2 ? s.repeat(2) : s)
+            .map(s -> s.length() < 2 ? "0".concat(s) : s)
             .collect(Collectors.joining(" "));
     }
 
