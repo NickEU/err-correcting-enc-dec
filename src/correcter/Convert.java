@@ -9,8 +9,16 @@ class Convert {
     public static String textToBin(String msg) {
         return msg.chars()
             .mapToObj(Integer::toBinaryString)
-            .map(s -> '0' + s + " ")
-            .collect(Collectors.joining());
+            .map(Convert::padByte)
+            .collect(Collectors.joining(" "));
+    }
+
+    private static String padByte(String s) {
+        var result = new StringBuilder(s);
+        while (result.length() < 8) {
+            result.insert(0, "0");
+        }
+        return result.toString();
     }
 
     public static String binToHex(String msg) {
