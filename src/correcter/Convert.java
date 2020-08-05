@@ -23,6 +23,8 @@ class Convert {
     }
 
     public static String binToText(String decodedMsgClean) {
-        return "Binary turned into text";
+        return Arrays.stream(decodedMsgClean.split(" "))
+            .map(b -> String.valueOf((char) Integer.parseInt(b, 2)))
+            .collect(Collectors.joining(""));
     }
 }
