@@ -1,7 +1,5 @@
 package correcter;
 
-import jdk.jshell.spi.ExecutionControl;
-
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -9,16 +7,8 @@ class Convert {
     public static String textToBin(String msg) {
         return msg.chars()
             .mapToObj(Integer::toBinaryString)
-            .map(Convert::padByte)
+            .map(Util::padByte)
             .collect(Collectors.joining(" "));
-    }
-
-    private static String padByte(String s) {
-        var result = new StringBuilder(s);
-        while (result.length() < 8) {
-            result.insert(0, "0");
-        }
-        return result.toString();
     }
 
     public static String binToHex(String msg) {

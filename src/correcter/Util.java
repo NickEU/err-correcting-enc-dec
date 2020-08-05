@@ -1,6 +1,7 @@
 package correcter;
 
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -32,17 +33,37 @@ public class Util {
     }
 
     static void writeToFileInBinary(String filename, byte[] bytes) {
-        try (FileOutputStream fStream = new FileOutputStream(filename))
+        try (FileOutputStream fs = new FileOutputStream(filename))
         {
-            fStream.write(bytes);
+            fs.write(bytes);
         } catch (IOException e) {
             System.out.println("Cannot write to file: " + e.getMessage());
         }
         System.out.println(Arrays.toString(bytes));
     }
 
-    static byte[] readFromFileInBinary(String filename) {
-        //Byte.toUnsignedInt(unsignedByte);
-        return null;
+    static String readFromFileInBinary(String filename) {
+        try (FileInputStream fs = new FileInputStream(filename)) {
+            StringBuilder result = new StringBuilder();
+            int nextSignedByte = fs.read();
+            while (nextSignedByte != -1) {
+                //Byte.toUnsignedInt(unsignedByte);
+                int nextUnsignedByte = 0xff & nextSignedByte;
+                result.append(padByte(Integer.toBinaryString(nextUnsignedByte))).append(" ");
+                nextSignedByte = fs.read();
+            }
+            return result.toString();
+        } catch (IOException e) {
+            System.out.println("Cannot read from file: " + e.getMessage());
+            return "";
+        }
+    }
+
+    static String padByte(String s) {
+        var result = new StringBuilder(s);
+        while (result.length() < 8) {
+            result.insert(0, "0");
+        }
+        return result.toString();
     }
 }
