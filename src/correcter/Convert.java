@@ -7,8 +7,8 @@ class Convert {
     public static String textToBin(String msg) {
         return msg.chars()
             .mapToObj(Integer::toBinaryString)
-            .map(s -> '0' + s + " ")
-            .collect(Collectors.joining());
+            .map(Util::padByte)
+            .collect(Collectors.joining(" "));
     }
 
     public static String binToHex(String msg) {
@@ -18,5 +18,11 @@ class Convert {
             .map(String::toUpperCase)
             .map(s -> s.length() < 2 ? s.repeat(2) : s)
             .collect(Collectors.joining(" "));
+    }
+
+    public static String binToText(String decodedMsgClean) {
+        return Arrays.stream(decodedMsgClean.split(" "))
+            .map(b -> String.valueOf((char) Integer.parseInt(b, 2)))
+            .collect(Collectors.joining(""));
     }
 }

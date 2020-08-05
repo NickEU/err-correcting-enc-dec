@@ -1,5 +1,7 @@
 package correcter;
 
+import java.io.ByteArrayOutputStream;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class UserInterface {
@@ -16,7 +18,7 @@ public class UserInterface {
                 encodeMessage();
                 break;
             case "decode":
-                System.out.println("Decoding!");
+                decodeMessage();
                 break;
             case"send":
                 sendMessage();
@@ -26,30 +28,56 @@ public class UserInterface {
         }
     }
 
+    private void decodeMessage() {
+        printHeader(RECEIVED_FILENAME);
+        String receivedMsgBinary = Util.readFromFileInBinary(RECEIVED_FILENAME);
+        printHexView(receivedMsgBinary);
+        printBinView(receivedMsgBinary);
+        printHeader(DECODED_FILENAME);
+        System.out.println("correct: " + receivedMsgBinary);
+        String decodedMsgRaw = Coder.decodeRaw(receivedMsgBinary);
+        System.out.println("decode: " + decodedMsgRaw);
+        String decodedMsgClean = Coder.finishDecoding(decodedMsgRaw);
+        System.out.println("remove: " + decodedMsgClean);
+        printHexView(decodedMsgClean);
+        String originalMsg = Convert.binToText(decodedMsgClean);
+        printTextView(originalMsg);
+        Util.writeToFileInPlainText(DECODED_FILENAME, originalMsg);
+    }
+
     private void sendMessage() {
         printHeader(ENCODED_FILENAME);
-        String msgEncoded = Util.readFromFile(ENCODED_FILENAME);
+        String msgEncoded = Util.readFromFileInBinary(ENCODED_FILENAME);
         printHexView(msgEncoded);
         printBinView(msgEncoded);
         String msgWithErrors = ErrorGenerator.corruptBytes(msgEncoded);
         printHeader(RECEIVED_FILENAME);
-        Util.writeToFile(RECEIVED_FILENAME, msgWithErrors);
+        Util.writeToFileInBinary(RECEIVED_FILENAME, stringOfBytesToArrayOfByte(msgWithErrors));
         printBinView(msgWithErrors);
         printHexView(msgWithErrors);
     }
 
     private void encodeMessage() {
         printHeader(SEND_FILENAME);
-        String msgOriginal = Util.readFromFile(SEND_FILENAME);
+        String msgOriginal = Util.readFromFileInPlainText(SEND_FILENAME);
         printTextView(msgOriginal);
         String msgBinary = Convert.textToBin(msgOriginal);
         printHexView(msgBinary);
         printBinView(msgBinary);
         printHeader(ENCODED_FILENAME);
         EncodedMsg encodedMsg = Coder.encode(msgBinary);
-        Util.writeToFile(ENCODED_FILENAME, encodedMsg.getParity());
+        byte[] bytes = stringOfBytesToArrayOfByte(encodedMsg.getParity());
+        Util.writeToFileInBinary(ENCODED_FILENAME, bytes);
         System.out.println(encodedMsg);
         printHexView(encodedMsg.getParity());
+    }
+
+    private byte[] stringOfBytesToArrayOfByte(String toBeConverted) {
+        return Arrays.stream(toBeConverted.split(" "))
+            .map(s -> (byte) Integer.parseInt(s, 2))
+            .collect(ByteArrayOutputStream::new, ByteArrayOutputStream::write,
+                (baos1, baos2) -> baos1.write(baos2.toByteArray(), 0, baos2.size()))
+            .toByteArray();
     }
 
     private void printTextView(String msgText) {
