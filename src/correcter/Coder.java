@@ -111,7 +111,13 @@ class Coder {
     }
 
     public static String finishDecoding(String decodedMsgRaw) {
-        return Arrays.stream(decodedMsgRaw.split(" "))
+        var bytes = decodedMsgRaw.split(" ");
+        String lastByte = bytes[bytes.length - 1];
+        if (lastByte.length() < 8 && lastByte.contains("1")) {
+            bytes[bytes.length - 2] = bytes[bytes.length - 2].substring(0, 7) + "1";
+        }
+
+        return Arrays.stream(bytes)
             .filter(s -> s.length() == 8)
             .collect(Collectors.joining(" "));
     }
