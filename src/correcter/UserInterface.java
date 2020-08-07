@@ -10,7 +10,7 @@ public class UserInterface {
     private static final String RECEIVED_FILENAME = "received.txt";
     private static final String DECODED_FILENAME = "decoded.txt";
 
-    void runStage4() {
+    void runStage5() {
         System.out.print("Write a mode: ");
         String userMode = new Scanner(System.in).nextLine().trim();
         switch(userMode) {
