@@ -27,22 +27,26 @@ class Coder {
                 parityXor = -1;
             }
         }
-        // fix last byte if the total num of significant bits % 3 != 0
-        while (idx % 3 != 0) {
-            parity.append(parityXor).append(parityXor);
-            parityXor ^= Character.getNumericValue(parity.charAt(parity.length() - 3));
-            idx++;
-            if (idx % 3 == 0) {
-                parity.append(parityXor).append(parityXor).append(" ");
-                break;
+        // fix last byte if the num of significant bits isn't divisible by 3
+        var encodedBytes = parity.toString().split(" ");
+        StringBuilder lastByte = new StringBuilder(encodedBytes[encodedBytes.length - 1]);
+        if (lastByte.length() < 8) {
+            lastByte.append("00");
+            parityXor ^= 0;
+            while (lastByte.length() < 8) {
+                lastByte.append(parityXor).append(parityXor);
+                parityXor ^= Character.getNumericValue(lastByte.charAt(lastByte.length() - 3));
             }
         }
+
+        encodedBytes[encodedBytes.length - 1] = lastByte.toString();
+
         String resultExpand = Arrays.stream(expand.toString().split(" "))
             .reduce("", (acc, cur) -> {
                 cur = cur.concat(".".repeat(8)).substring(0, 8);
                 return acc + " " + cur;
             }).stripLeading();
-        return new EncodedMsg(resultExpand, parity.toString());
+        return new EncodedMsg(resultExpand, String.join(" ", encodedBytes));
     }
 
     public static String decodeRaw(String receivedMsg) {
