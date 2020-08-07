@@ -35,10 +35,8 @@ public class UserInterface {
         printBinView(receivedMsgBinary);
         printHeader(DECODED_FILENAME);
         System.out.println("correct: " + receivedMsgBinary);
-        String decodedMsgRaw = Coder.decodeRaw(receivedMsgBinary);
-        System.out.println("decode: " + decodedMsgRaw);
-        String decodedMsgClean = Coder.finishDecoding(decodedMsgRaw);
-        System.out.println("remove: " + decodedMsgClean);
+        String decodedMsgClean = CoderHamming.decode(receivedMsgBinary);
+        System.out.println("decode: " + decodedMsgClean);
         printHexView(decodedMsgClean);
         String originalMsg = Convert.binToText(decodedMsgClean);
         printTextView(originalMsg);
@@ -65,7 +63,7 @@ public class UserInterface {
         printHexView(msgBinary);
         printBinView(msgBinary);
         printHeader(ENCODED_FILENAME);
-        EncodedMsg encodedMsg = Coder.encode(msgBinary);
+        EncodedMsg encodedMsg = CoderHamming.encode(msgBinary);
         byte[] bytes = stringOfBytesToArrayOfByte(encodedMsg.getParity());
         Util.writeToFileInBinary(ENCODED_FILENAME, bytes);
         System.out.println(encodedMsg);

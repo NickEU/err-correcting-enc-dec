@@ -39,7 +39,6 @@ public class Util {
         } catch (IOException e) {
             System.out.println("Cannot write to file: " + e.getMessage());
         }
-        System.out.println(Arrays.toString(bytes));
     }
 
     static String readFromFileInBinary(String filename) {

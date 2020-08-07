@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-class Coder {
+class CoderBad {
     public static EncodedMsg encode(String msgBinary) {
         StringBuilder expand = new StringBuilder();
         StringBuilder parity = new StringBuilder();
@@ -51,7 +51,7 @@ class Coder {
 
     public static String decodeRaw(String receivedMsg) {
         var bits = Arrays.stream(receivedMsg.split(" "))
-            .map(Coder::decodeByte)
+            .map(CoderBad::decodeByte)
             .collect(Collectors.joining());
         var result = new StringBuilder();
         for (int i = 0; i < bits.length(); i++) {
