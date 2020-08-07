@@ -36,7 +36,7 @@ public class UserInterface {
         printHeader(DECODED_FILENAME);
         System.out.println("correct: " + receivedMsgBinary);
         String decodedMsgClean = CoderHamming.decode(receivedMsgBinary);
-        System.out.println("decode: " + decodedMsgClean);
+        System.out.println("decode : " + decodedMsgClean);
         printHexView(decodedMsgClean);
         String originalMsg = Convert.binToText(decodedMsgClean);
         printTextView(originalMsg);
